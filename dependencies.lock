@@ -1,0 +1,34 @@
+dependencies:
+  esp_lcd_touch:
+    dependencies: []
+    source:
+      path: 
+        /Users/rgonza/Documents/EmbDev/esp32/esp32_slint_template/extern/esp-bsp/components/lcd_touch/esp_lcd_touch
+      type: local
+    version: 1.2.1
+  idf:
+    source:
+      type: idf
+    version: 6.0.0
+  slint/slint:
+    component_hash: 
+      264013307b9d08da9edeec0dd6e938838cb14d4f0a4dd1f555648116cf04eb8d
+    dependencies:
+    - name: espressif/esp_lcd_touch
+      registry_url: https://components.espressif.com
+      require: public
+      version: '>=1.0.4'
+    - name: idf
+      require: private
+      version: '>=5.1'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.18.0
+direct_dependencies:
+- esp_lcd_touch
+- idf
+- slint/slint
+manifest_hash: 1d5d5f019e8b07222bd27b2d3488bf74ec69cf301c6229b93f251a97a9b212c6
+target: esp32s3
+version: 2.0.0

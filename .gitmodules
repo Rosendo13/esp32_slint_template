@@ -1,0 +1,7 @@
+[submodule "extern/esp-bsp"]
+	path = extern/esp-bsp
+	url = https://github.com/espressif/esp-bsp.git
+[submodule "extern/qpcpp"]
+	path = extern/qpcpp
+	url = https://github.com/QuantumLeaps/qpcpp
+	branch = master

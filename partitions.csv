@@ -1,0 +1,7 @@
+# Name,   Type, SubType, Offset,  Size, Flags
+# 8 MB flash. The Slint runtime plus the embedded fonts and images push the
+# app well past the ~1.9 MB that single_app_large allows, so the factory
+# partition is sized at 4 MB.
+nvs,      data, nvs,     0x9000,  0x6000,
+phy_init, data, phy,     ,        0x1000,
+factory,  app,  factory, ,        4M,

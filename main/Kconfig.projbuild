@@ -1,0 +1,58 @@
+menu "Project Configuration"
+    menu "Event Memory Pool"
+        config QP_SMALL_POOL_SIZE
+            int "Small Memory Pool Size"
+            range 16 512
+            default 32
+            help
+                Max number of events in a small memory pool
+
+    endmenu
+
+    config WIFI_SSID
+        string "WiFi SSID"
+        default ""
+        help
+            SSID for the WiFi network this device should join.
+            Set this in menuconfig or via the build environment before flashing.
+
+    config WIFI_PASSWORD
+        string "WiFi password"
+        default ""
+        help
+            WiFi password for the configured SSID. Keep this out of source control.
+            Prefer provisioning via NVS or another secure runtime mechanism in production.
+
+    config EXAMPLE_DOUBLE_FB
+        bool "Use double Frame Buffer"
+        default "y"
+        help
+            Allocate two framebuffers in PSRAM and hand both to Slint, so it can
+            render into one while the panel scans the other. Disable to render
+            line by line out of internal RAM instead, which uses far less memory
+            at the cost of frame rate.
+
+    config TOUCH_BOOT_DIAGNOSTIC
+        bool "Sample the touch controller at boot"
+        default "y"
+        help
+            After the GT911 is initialized, poll it directly for a few seconds
+            and log any contacts, before Slint takes ownership of the handle.
+            Distinguishes an unresponsive controller from coordinates that
+            arrive but are mapped wrongly. Turn off once touch is working.
+
+    config TOUCH_BOOT_DIAGNOSTIC_SECONDS
+        int "Touch diagnostic duration (seconds)"
+        depends on TOUCH_BOOT_DIAGNOSTIC
+        range 1 30
+        default 5
+        help
+            How long to sample the touch controller at boot. Boot is delayed
+            by this long.
+
+    config EXAMPLE_USE_BOUNCE_BUFFER
+        depends on !EXAMPLE_DOUBLE_FB
+        bool "Use bounce buffer"
+        help
+            Enable bounce buffer mode can achieve higher PCLK frequency at the cost of higher CPU consumption.
+endmenu

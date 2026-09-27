@@ -1,0 +1,14 @@
+## IDF Component Manager Manifest File
+dependencies:
+  idf: ">=5.3"
+
+  # Slint C++ for ESP-IDF. Pulls in the Slint runtime, which CMake builds from
+  # Rust source for the Xtensa target -- see README.md ("Toolchain").
+  slint/slint: "^1.18.0"
+
+  # slint/slint depends on esp_lcd_touch from the registry. Point it at the
+  # esp-bsp submodule instead so the GT911 driver and the touch core come from
+  # the same checkout.
+  esp_lcd_touch:
+    version: ">=1.0.4"
+    override_path: "../extern/esp-bsp/components/lcd_touch/esp_lcd_touch"

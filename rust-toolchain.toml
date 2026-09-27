@@ -1,0 +1,14 @@
+# NOT needed for a normal build.
+#
+# Slint's runtime is written in Rust, but the slint/slint component resolves it
+# to a prebuilt libslint_cpp.a downloaded from the Slint GitHub release, so
+# nothing here invokes cargo and no Rust toolchain has to be installed.
+#
+# This file only matters if that lookup fails (a target Slint publishes no
+# binary for, or a pinned version predating them). The component then falls
+# back to building the runtime from source, which needs Espressif's "esp" Rust
+# fork -- upstream Rust has no xtensa-esp32s3-none-elf target, and the source
+# build passes -Zbuild-std, which requires a nightly channel. Install it with
+# `cargo install espup && espup install`.
+[toolchain]
+channel = "esp"

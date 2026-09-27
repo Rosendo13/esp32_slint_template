@@ -1,0 +1,51 @@
+CONFIG_IDF_TARGET="esp32s3"
+
+# --- Flash / partitions ---------------------------------------------------
+# 8 MB board. The Slint runtime plus embedded fonts and images do not fit in
+# the ~1.9 MB of single_app_large, so partitions.csv gives the app 4 MB.
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# --- PSRAM ----------------------------------------------------------------
+# Holds the two 800x480x2 framebuffers (1.5 MB) plus code and rodata.
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
+CONFIG_SPIRAM_RODATA=y
+
+# --- Performance ----------------------------------------------------------
+# -O2: the software renderer's blend/blit inner loops are the hot path.
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+# Code is fetched from PSRAM (CONFIG_SPIRAM_FETCH_INSTRUCTIONS), so cache size
+# dominates frame time.
+CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB=y
+CONFIG_ESP32S3_DATA_CACHE_32KB=y
+# KEEP AT 32B. The RGB panel's EDMA streams the framebuffer straight out of
+# PSRAM, and the data-cache line size governs that burst behaviour. A 64B line
+# here renders the image horizontally offset by roughly half the screen.
+# Slint's own ESP-IDF demo sets 64B, but that board (ESP32-S3-Box) drives an
+# SPI panel and never reads a framebuffer over EDMA.
+CONFIG_ESP32S3_DATA_CACHE_LINE_32B=y
+
+# --- Display --------------------------------------------------------------
+# Two framebuffers: Slint renders into one while the panel scans the other,
+# and flushing is a page flip instead of a copy. Turn this off to fall back to
+# line-by-line rendering out of internal RAM.
+CONFIG_EXAMPLE_DOUBLE_FB=y
+
+# --- FreeRTOS / QP --------------------------------------------------------
+# 1 kHz tick. PrinterAo arms its QTimeEvt in ticks (configTICK_RATE_HZ == 1 s),
+# and the QP tick hook runs at this rate.
+CONFIG_FREERTOS_HZ=1000
+# app_main becomes the Slint event-loop task and has to carry the software
+# renderer. This mirrors the upstream Slint ESP-IDF demo; trim it only with a
+# high-water-mark measurement in hand.
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=150000
+
+# QP event pool: one event per queue change, plus bursts while a job prints.
+CONFIG_QP_SMALL_POOL_SIZE=64
